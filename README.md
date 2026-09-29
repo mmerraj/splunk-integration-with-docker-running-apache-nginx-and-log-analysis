@@ -1,0 +1,2 @@
+# splunk-integration-with-vm-running-apache-nginx-and-log-analysis
+This repository provides an implementation and configuration guide for building a local SIEM development environment and how to deploy splunk enterprise on a primary host machine while setting up a splunk universal forwarder  inside a vm. a fundamental skill for security enthusiast , we'll be enabling port 9997 as the data-receiver on splunk server
