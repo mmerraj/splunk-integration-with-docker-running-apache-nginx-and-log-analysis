@@ -63,3 +63,56 @@ sudo /opt/splunkforwarder/bin/splunk add forward-server <WINDOWS_IP>:9997
 <sub>in my case the windows ip is going to be the ip of the vmware nat i.e 192.168.239.2, as im running running a vm<sub/>
 
 
+## Step 3: run the docker container mapping the logs to a local folder:
+```bash
+docker run -d --name my-nginx-server-docker -p 80:80 -v /path/to/local/logs/access.log:/var/log/nginx/access.log nginx:alpine
+```
+<sub>this will keep updating the logs<sub/>
+
+## step 4: set up the monitor:
+```bash
+sudo /opt/splunkforwarder/bin/splunk add monitor /path/to/local/logs/access.log
+```
+
+## Step 5: set up the forward-server:
+```bash
+sudo /opt/splunkforwarder/bin/splunk add forward-server 192.168.239.1:9997
+```
+
+## Step 6: open splunk enterprise on the indexer:
+in our case indexer and the searcher are the same server, 
+<ul> go to http://localhost:8001 on the host machine<ul/>
+go to settings
+ search receiving and forwarding
+set up a new receiver
+open port 9997
+
+
+## step 7: set up an inbound rule for windows defender:
+open windows defender firewall
+<img width="873" height="457" alt="image" src="https://github.com/user-attachments/assets/81e15dab-c895-4827-865b-071da3369527" />
+
+click on Advanced settings
+<img width="338" height="281" alt="image" src="https://github.com/user-attachments/assets/fcd65974-04f1-4cd2-8e06-94afd62aa702" />
+
+click on inbound rules
+<img width="437" height="221" alt="image" src="https://github.com/user-attachments/assets/53c19133-8f6e-44d3-ad27-127d1ccdea88" />
+
+click on new rule and select port > TCP  specific port: 9997 
+
+save
+
+## step 8: restart splunk forwarder:
+paste this into the command:
+
+```bash
+sudo /opt/splunkforwarder/bin/splunk restart
+```
+##  now open the website and you should see the logs in splunk
+
+<img width="1870" height="1018" alt="image" src="https://github.com/user-attachments/assets/2c10480f-8242-48fa-bf1e-bd37ab2a086c" />
+
+
+## SPLUNK SERVER
+<img width="1912" height="1009" alt="image" src="https://github.com/user-attachments/assets/bd665b48-d432-4252-8d4e-13348e555201" />
+
